@@ -43,6 +43,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+
+
     public Long getId() {
         return id;
     }
@@ -156,4 +158,5 @@ public class User implements UserDetails {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }
