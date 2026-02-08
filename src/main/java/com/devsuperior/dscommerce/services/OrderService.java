@@ -28,12 +28,16 @@ public class OrderService {
     private ProductRepository productRepository;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private UserService userService;
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         Order order = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado"));
+        authService.validateSelfOrAdmin(order.getClient().getId());
         return new OrderDTO(order);
     }
 
@@ -41,7 +45,7 @@ public class OrderService {
         Order order = new Order();
         order.setMoment(Instant.now());
         order.setStatus(OrderStatus.WAITING_PAYMENT);
-        User user = userService.autenticated();
+        User user = userService.authenticated();
         order.setClient(user);
         for(OrderItemDTO itemDTO : dto.getItens()){
             Product product  = productRepository.getReferenceById(itemDTO.getOrderId());
