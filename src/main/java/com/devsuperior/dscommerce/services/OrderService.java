@@ -40,14 +40,14 @@ public class OrderService {
         return new OrderDTO(order);
     }
 
-    public @Valid OrderDTO insert(OrderDTO dto) {
+    public OrderDTO insert(OrderDTO dto) {
         Order order = new Order();
         order.setMoment(Instant.now());
         order.setStatus(OrderStatus.WAITING_PAYMENT);
         User user = userService.authenticated();
         order.setClient(user);
         for(OrderItemDTO itemDTO : dto.getItens()){
-            Product product  = productRepository.getReferenceById(itemDTO.getOrderId());
+            Product product  = productRepository.getReferenceById(itemDTO.getProductId());
             OrderItem item = new OrderItem(order, product, itemDTO.getQuantity(), product.getPrice());
             order.getItems().add(item);
         }
